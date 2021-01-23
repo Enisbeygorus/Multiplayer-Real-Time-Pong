@@ -31,7 +31,3 @@ Again Enter a name and paste the game code in [Enter Game Code] input.
 After all of this click join game in new opened browser tab.
 
 So we created multiplayer with socket.io. Players can play in different browser.
-
-Credits: \
-https://github.com/HungryTurtleCode/multiplayerSnake \
-https://github.com/CodeExplainedRepo/Ping-Pong-Game-JavaScript
