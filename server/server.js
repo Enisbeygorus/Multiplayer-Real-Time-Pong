@@ -19,7 +19,7 @@ app.get("/", function (request, response) {
 });
 
 // Starts the server.
-server.listen(3000, function () {
+server.listen(process.env.PORT || 3000, function () {
   console.log("Starting server on port 3000");
 });
 
