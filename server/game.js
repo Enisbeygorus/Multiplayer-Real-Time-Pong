@@ -25,7 +25,6 @@ function createGameState() {
         height: 100,
         score: 0,
         velocity: 5,
-        name: 'Player 1',
       },
       {
         x: canvas.width - 20, // left side of canvas
@@ -34,7 +33,6 @@ function createGameState() {
         height: 100,
         score: 0,
         velocity: 5,
-        name: 'Player 2',
       },
     ],
 
@@ -60,18 +58,18 @@ function gameLoop(state) {
 
   if (ball.x - ball.radius < 0) {
     resetBall(ball);
-    playerOne.score++;
-    // console.log("player Two = ", playerOne);
+    playerTwo.score++;
   } else if (ball.x + ball.radius > canvas.width) {
     resetBall(ball);
-    playerTwo.score++;
-    // console.log("player Two = ", playerTwo);
+    playerOne.score++;
   }
 
   if (playerOne.score > 4) {
+    return 1;
   }
 
   if (playerTwo.score > 4) {
+    return 2;
   }
 
   ball.x += ball.velocityX;

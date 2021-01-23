@@ -7,12 +7,7 @@ const app = express();
 const server = http.Server(app);
 const io = socketIO(server);
 
-const {
-  createGameState,
-  gameLoop,
-  handleMovement,
-  initGame,
-} = require("./game");
+const { gameLoop, handleMovement, initGame } = require("./game");
 
 const { makeId } = require("./utils");
 
@@ -31,14 +26,18 @@ server.listen(3000, function () {
 const FRAME_RATE = 60;
 const state = {};
 const clientRooms = {};
+const clientNames = {};
 
 io.on("connection", (client) => {
-
   client.on("movement", (data) =>
     handleMovement(data, state, client, clientRooms)
   );
-  client.on("newGame", () => handleNewGame(client));
-  client.on("joinGame", (roomName) => handleJoinGame(roomName, client));
+  client.on("newGame", (data) => handleNewGame(data, client));
+  client.on("joinGame", (data) => handleJoinGame(data, client));
+
+  client.on("disconnect", (data) => {
+    delete clientNames[client.id];
+  });
 });
 
 function startGameInterval(roomName) {
@@ -63,9 +62,11 @@ function emitGameOver(roomName, winner) {
   io.sockets.in(roomName).emit("gameOver", JSON.stringify({ winner }));
 }
 
-function handleNewGame(client) {
+function handleNewGame(data, client) {
   let roomName = makeId(5);
   clientRooms[client.id] = roomName;
+  clientNames[client.id] = data.playerName;
+
   client.emit("gameCode", roomName);
   state[roomName] = initGame();
 
@@ -74,17 +75,18 @@ function handleNewGame(client) {
   client.emit("init", 1);
 }
 
-function handleJoinGame(roomName, client) {
-  if(io.sockets.adapter.rooms.get(roomName) === undefined){
+function handleJoinGame(data, client) {
+  const roomName = data.code;
+  if (io.sockets.adapter.rooms.get(roomName) === undefined) {
     client.emit("unknownGame");
     return;
   }
-  const room = Array.from(io.sockets.adapter.rooms.get(roomName));
+  const room = io.sockets.adapter.rooms.get(roomName);
 
   let numClients = 0;
 
-  if (room.length) {
-    numClients = room.length;
+  if (room.size) {
+    numClients = room.size;
   }
 
   if (numClients == 0) {
@@ -96,9 +98,18 @@ function handleJoinGame(roomName, client) {
   }
 
   clientRooms[client.id] = roomName;
+  clientNames[client.id] = data.playerName;
+
   client.join(roomName);
   client.number = 2;
   client.emit("init", 2);
+
+  const roomPlayerNames = [];
+  Array.from(room).forEach((clientId) => {
+    roomPlayerNames.push(clientNames[clientId]);
+  });
+
+  io.sockets.in(roomName).emit("playerNames", JSON.stringify(roomPlayerNames));
 
   startGameInterval(roomName);
 }

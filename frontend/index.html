@@ -45,7 +45,13 @@
 
     <div id="gameScreen" class="h-100">
         <div class="d-flex flex-column align-items-center justify-content-center h-100">
-          <h1>Your game code is:  <span id="gameCodeDisplay"></span> </h1>
+          <h2 class="p-1 border-bottom-1" >Your game code is:  <span id="gameCodeDisplay"></span> </h2>
+
+          <div style="width: 800px;" class="mb-3 mt-2 d-flex justify-content-around">
+            <span class="h3" id="playerOneName"><strong>Player 1</strong></span>
+            <span class="h3" id="playerTwoName"><strong>Player 2</strong></span>
+          </div>
+
           <canvas id="canvas"></canvas>
         </div>
       </div>
