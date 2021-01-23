@@ -14,7 +14,7 @@ After downloading node.js in the root first you need to run:
 
 to install all the packages.
 
-After installing all the packages again in the project directory, you can run:
+After installing all the packages in the server directory, you can run:
 
 ### `npx nodemon server.js`
 
@@ -32,5 +32,6 @@ After all of this click join game in new opened browser tab.
 
 So we created multiplayer with socket.io. Players can play in different browser.
 
-Credits: https://github.com/HungryTurtleCode/multiplayerSnake
-         https://github.com/HungryTurtleCode/multiplayerSnake
+Credits: \
+https://github.com/HungryTurtleCode/multiplayerSnake
+https://github.com/HungryTurtleCode/multiplayerSnake
